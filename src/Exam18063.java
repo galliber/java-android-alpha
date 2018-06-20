@@ -14,7 +14,7 @@ public class Exam18063 {
         char[] arr=strsb.toString().toCharArray();
 
         Stack<Character> operators=new Stack<>();
-        Stack<Integer> al=new Stack<>();
+        Stack<BigInteger> al=new Stack<>();
         StringBuilder sb=new StringBuilder();
         for(char c:arr){
             if(Character.isDigit(c))
@@ -23,35 +23,31 @@ public class Exam18063 {
                 if(c!='('&&c!=')')
                     operators.push(c);
                 if(sb.length()>0) {
-                    al.push(Integer.parseInt(sb.toString()));
+                    al.push(new BigInteger(sb.toString()));
                     sb = new StringBuilder();
                 }
             }
 
         }
         if(sb.length()!=0)
-            al.add(Integer.parseInt(sb.toString()));
+            al.push(new BigInteger(sb.toString()));
 
-        int result=al.pop();
 
-        BigInteger bigInt=BigInteger.valueOf(result);
+        BigInteger bigInt=al.pop();
         while (!al.empty()){
             char o=operators.pop();
-            int next=al.pop();
+            BigInteger next=al.pop();
             if(al.empty()&&!operators.empty())
-                next*=-1;
+                next=BigInteger.ZERO.subtract(next);
             if(o=='+') {
-                result += next;
-                bigInt=bigInt.add(BigInteger.valueOf(next));
+                bigInt=bigInt.add(next);
             }
             else if(o=='-') {
-                result = (result * (-1)) + next;
                 bigInt=BigInteger.ZERO.subtract(bigInt);
-                bigInt=bigInt.add(BigInteger.valueOf(next));
+                bigInt=bigInt.add(next);
             }
             else {
-                result *= next;
-                bigInt=bigInt.multiply(BigInteger.valueOf(next));
+                bigInt=bigInt.multiply(next);
             }
         }
 
